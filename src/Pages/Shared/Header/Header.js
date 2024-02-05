@@ -7,13 +7,21 @@ import LeftSideNav from '../LeftSideNav/LeftSideNav';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 import { FaUser } from 'react-icons/fa';
-import { Image } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 
 const Header = () => {
-  const { user } = useContext(AuthContext)
-    return (
+  const { user , logOut } = useContext(AuthContext);
+    
+  const handleLogOut =() => {
+    logOut()
+    .then( () => {})
+    .catch( error=> console.error(error))
+  }
+  
+  
+  return (
         <div>
-    <Navbar collapseOnSelect className='mb-4' expand="lg" className="bg-body-tertiary">
+    <Navbar collapseOnSelect className='mb-4' expand="lg" bg="li">
       <Container>
         <Navbar.Brand><Link to='/'>Dragon News</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -34,16 +42,31 @@ const Header = () => {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">{user?.displayName}</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              {user.photoURL ?
+            <>
+              {
+              user?.uid?
+              <>
+              <span>{user?.displayName}</span>
+<Button variant="light" onClick={handleLogOut}>Log out</Button>
+</>
 
-<Image style={{height: '40px'}} roundedCircle src={user.photoURL}></Image>
+
+:
+<>  
+<Link to={'/login'}>Login</Link>
+<Link to={'/register'}>Register</Link>
+</>
+}
+</>
+<Link to="/profile">
+  {user?.photoURL ?
+
+<Image style={{height: '40px'}} roundedCircle src={user?.photoURL}></Image>
 
 
-            : <FaUser></FaUser>
+: <FaUser></FaUser>
               }
-              </Nav.Link>
+              </Link>
           </Nav>
 <div className='d-lg-none'>
     <LeftSideNav></LeftSideNav>
